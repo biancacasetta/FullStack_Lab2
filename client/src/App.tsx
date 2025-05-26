@@ -1,34 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react';
 import './App.css'
+import Table from './components/Table.tsx';
+import { Assignment, AssignmentResponse } from './types.tsx';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      const res = await fetch("api/project_assignments");
+      const data = await res.json();
+
+      const parsedData: Assignment[] = data.map((item:AssignmentResponse) => ({
+        employee_id: item.employee_id.employee_id.toString(),
+        employee_name: item.employee_id.full_name,
+        project_name: item.project_code.project_name,
+        start_date: item.start_date
+      }))
+      
+      setAssignments(parsedData);
+    }
+    fetchAssignments();
+    const interval = setInterval(fetchAssignments, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className='flex flex-col items-center justify-center pt-10'>
+      <h1 className='text-3xl font-bold mb-10'>Project Assignments</h1>
+      <Table data={assignments}/>
+    </div>
   )
 }
 
