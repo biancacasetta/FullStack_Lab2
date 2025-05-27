@@ -14,33 +14,37 @@ type Props = {
     data: Assignment[];
 }
 
+const columnHelper = createColumnHelper<Assignment>()
+
+const columns = [
+    columnHelper.accessor('employee_id', {
+        header: "Employee ID",
+        cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('employee_name', {
+        header: "Employee Name",
+        cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('project_name', {
+        header: "Project Name",
+        cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('start_date', {
+        header: "Start Date",
+        cell: ({ getValue }) => {
+            const date: Date = getValue();
+            return date.toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+            });
+        },
+        sortingFn: 'datetime',
+    })
+]
+
 const Table: React.FC<Props> = ({ data }) => {
     const [sorting, setSorting] = useState<SortingState>([]);
-
-    const columnHelper = createColumnHelper<Assignment>()
-
-    const columns = [
-    columnHelper.accessor('employee_id', {
-            header: "Employee ID",
-            cell: info => info.getValue(),
-            enableSorting: true
-        }),
-        columnHelper.accessor('employee_name', {
-            header: "Employee Name",
-            cell: info => info.getValue(),
-            enableSorting: true
-        }),
-        columnHelper.accessor('project_name', {
-            header: "Project Name",
-            cell: info => info.getValue(),
-            enableSorting: true
-        }),
-        columnHelper.accessor('start_date', {
-            header: "Start Date",
-            cell: info => info.getValue(),
-            enableSorting: true
-        })
-    ]
 
     const table = useReactTable({
         data,
@@ -55,8 +59,8 @@ const Table: React.FC<Props> = ({ data }) => {
 
     return (
         <div className="w-1/2">
-            <table className='w-full bg-purple-200 rounded-2xl overflow-hidden'>
-                <thead className='bg-purple-500'>
+            <table className='w-full bg-blue-200 rounded-2xl overflow-hidden'>
+                <thead className='bg-blue-400 text-white'>
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map(h => (

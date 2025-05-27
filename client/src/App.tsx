@@ -15,7 +15,7 @@ function App() {
         employee_id: item.employee_id.employee_id.toString(),
         employee_name: item.employee_id.full_name,
         project_name: item.project_code.project_name,
-        start_date: item.start_date
+        start_date: new Date(item.start_date)
       }))
       
       setAssignments(parsedData);
