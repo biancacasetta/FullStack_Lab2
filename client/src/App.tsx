@@ -28,6 +28,7 @@ function App() {
   return (
     <div className='flex flex-col items-center justify-center pt-10'>
       <h1 className='text-3xl font-bold mb-10'>Project Assignments</h1>
+      <h2>A table with information about the project assignments</h2>
       <Table data={assignments}/>
     </div>
   )
